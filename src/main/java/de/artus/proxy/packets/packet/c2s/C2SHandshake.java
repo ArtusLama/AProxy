@@ -1,6 +1,6 @@
-package de.artus.proxy.packets.c2s;
+package de.artus.proxy.packets.packet.c2s;
 
-import de.artus.proxy.packets.Packet;
+import de.artus.proxy.packets.packet.Packet;
 import de.artus.proxy.packets.fieldtypes.StringField;
 import de.artus.proxy.packets.fieldtypes.UShortField;
 import de.artus.proxy.packets.fieldtypes.VarIntField;

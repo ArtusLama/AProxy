@@ -1,14 +1,12 @@
-package de.artus.proxy.packets;
+package de.artus.proxy.packets.packet;
 
-import de.artus.proxy.packets.c2s.C2SPackets;
+import de.artus.proxy.packets.packet.c2s.C2SPackets;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.HexFormat;
 
 @Slf4j
 public abstract class Packet {
@@ -17,13 +15,13 @@ public abstract class Packet {
     public abstract void write(DataOutputStream stream) throws IOException;
 
     public void send(DataOutputStream outputStream) throws IOException {
-        log.trace("Sending Packet: {}", this.getClass().getSimpleName());
-
         ByteArrayOutputStream x = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(x);
 
         // Indicate Packet ID
-        dataStream.write(C2SPackets.getIdByPacket(this.getClass()));
+        if (this instanceof UnknownPacket unknownPacket) dataStream.write(unknownPacket.getId());
+        else dataStream.write(C2SPackets.getIdByPacket(this.getClass()));
+
         write(dataStream);
 
         // Send Packet size

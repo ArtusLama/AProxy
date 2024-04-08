@@ -11,6 +11,10 @@ public class SRVLookup {
 
     private static final String SRV_QUERY_PREFIX = "_minecraft._tcp.%s";
 
+
+    public static InetSocketAddress lookup(ServerAddress server) {
+        return lookup(server.getHost(), server.getPort());
+    }
     public static InetSocketAddress lookup(String hostname, int port) {
         try {
             Lookup lookup = new Lookup(String.format(SRV_QUERY_PREFIX, hostname), Type.SRV);

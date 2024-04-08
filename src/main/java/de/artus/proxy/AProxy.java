@@ -1,12 +1,12 @@
 package de.artus.proxy;
 
 
-import de.artus.proxy.packets.c2s.C2SHandshake;
-import de.artus.proxy.packets.c2s.C2SStatusRequest;
+import de.artus.proxy.packets.packet.c2s.C2SHandshake;
+import de.artus.proxy.packets.packet.c2s.C2SStatusRequest;
 import de.artus.proxy.packets.fieldtypes.StringField;
 import de.artus.proxy.packets.fieldtypes.UShortField;
 import de.artus.proxy.packets.fieldtypes.VarIntField;
-import de.artus.proxy.packets.s2c.S2CStatusResponse;
+import de.artus.proxy.packets.packet.s2c.S2CStatusResponse;
 import de.artus.proxy.util.SRVLookup;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HexFormat;
 
 @Slf4j
 public class AProxy {
@@ -41,6 +40,6 @@ public class AProxy {
         int packetSize = new VarIntField().read(in).getValue();
         int packetId = new VarIntField().read(in).getValue();
         log.trace("Incoming Packet: Size={} Id={}", packetSize, packetId);
-        log.info("Status Response JSON: " + new S2CStatusResponse().read(in).getJson_response().getValue());
+        log.info("Status Response JSON: " + new S2CStatusResponse().read(in).getResponse());
     }
 }
