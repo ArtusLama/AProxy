@@ -20,8 +20,8 @@ public class TestPacketListener implements PacketListener {
         return PacketEventResult.PASS;
     }
     @OnPacket
-    public PacketEventResult onPacket2(S2CStatusResponse packet) {
-        log.info("I am going to CANCEL the packet: {}", packet);
-        return PacketEventResult.CANCELLED;
+    public void onPacket2(S2CStatusResponse packet) {
+        // VOID => Never cancels!
+        log.info("I am going to CANCEL the packet: {} (NOT ANYMORE :D)", packet);
     }
 }

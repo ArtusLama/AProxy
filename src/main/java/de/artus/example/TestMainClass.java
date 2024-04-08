@@ -1,5 +1,8 @@
 package de.artus.example;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import de.artus.proxy.client.ping.ServerListPingClient;
 import de.artus.proxy.util.ServerAddress;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +18,14 @@ public class TestMainClass {
 
         serverListPingClient.getPacketManager().registerHandler(new TestPacketListener());
 
-        log.info(serverListPingClient.ping().getPlayers().getMax() + "");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonOutput = gson.toJson(serverListPingClient.ping());
+        log.info("Server Ping Result:\n" + jsonOutput);
+
+
+
+
+        //log.info(new Gson().toJson(serverListPingClient.ping()).prettyPrint());
 
 
         /*ServerListResponse res = new ServerListResponse(new ServerListResponse.Version("lol", 4),
