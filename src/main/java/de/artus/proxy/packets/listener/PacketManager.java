@@ -50,7 +50,7 @@ public class PacketManager {
                         if (method.getParameterTypes()[0] == packetClass) {
                             try {
                                 log.trace("Invoking listener with method type {}", packetClass.getSimpleName());
-                                if (method.getReturnType().isAssignableFrom(Void.TYPE)) method.invoke(packetClass.cast(packet));
+                                if (method.getReturnType().isAssignableFrom(Void.TYPE)) method.invoke(handler.getClass().getConstructor().newInstance(),packetClass.cast(packet));
                                 else {
                                     PacketEventResult result = (PacketEventResult) method.invoke(handler.getClass().getConstructor().newInstance(),packetClass.cast(packet));
                                     if (result == PacketEventResult.CANCELLED) return false;
