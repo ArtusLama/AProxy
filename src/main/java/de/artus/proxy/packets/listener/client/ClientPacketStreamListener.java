@@ -22,10 +22,10 @@ public class ClientPacketStreamListener extends PacketStreamListener {
     protected void listenThread() {
         try {
             setListening(true);
-            outerLoop: while (isListening()) {
+            while (isListening()) {
 
                 while (getStream().available() == 0) { // not 'the yellow from the egg' ;D
-                    if (!isListening()) continue outerLoop;
+                    if (!isListening()) break;
                 }
 
                 int packetLength = new VarIntField().read(getStream()).getValue();
