@@ -68,8 +68,6 @@ public class ServerPingClient {
         incomingPackets.expectPacket(S2CStatusResponse.class);
 
 
-
-
         getPacketManager().sendPacket(new C2SPingRequest(
                 new CurrentTimeMillisLongField() // the time we sent the ping request (custom filed because we need the time in milliseconds when actually sending the packet)
         ), out);

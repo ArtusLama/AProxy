@@ -22,20 +22,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+@Getter
 @Slf4j
 @RequiredArgsConstructor
 public class ServerListPingClient {
 
-    @Getter
     private final ServerAddress server;
 
-    @Getter @Setter
+    @Setter
     private Socket socket;
 
-    @Getter @Setter
+    @Setter
     private int timeout = 7000;
 
-    @Getter
     private final PacketManager packetManager = new PacketManager();
 
     public ServerListResponse ping() throws IOException {

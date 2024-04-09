@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Getter
 @AllArgsConstructor
 public enum C2SPackets {
 
@@ -21,13 +22,10 @@ public enum C2SPackets {
 
     ;
 
-    @Getter
     private final int id;
 
-    @Getter
     private final PacketState state;
 
-    @Getter
     private final Class<? extends Packet> packetClass;
 
     public static int getIdByPacket(Class<? extends Packet> packet) {
