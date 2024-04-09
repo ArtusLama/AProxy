@@ -33,7 +33,7 @@ public class ClientPacketStreamListener extends PacketStreamListener {
                 log.trace("Incoming Packet: Size={} Id={}", packetLength, "0x" + Integer.toHexString(packetId));
 
 
-                Class<? extends Packet> packetClass = S2CPackets.getPacketById(packetId);
+                Class<? extends Packet> packetClass = S2CPackets.getPacketById(packetId, getPacketContext());
                 if (packetClass == UnknownPacket.class) {
                     log.warn("Unknown Packet ID: {}! Using UnknownPacket", "0x" + Integer.toHexString(packetId));
                     onPacketReceived(new UnknownPacket().setLength(packetLength).setId(packetId).read(getStream()));

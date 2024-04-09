@@ -1,6 +1,7 @@
 package de.artus.proxy.packets.listener;
 
 import de.artus.proxy.packets.packet.Packet;
+import de.artus.proxy.packets.packet.PacketState;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -18,14 +19,17 @@ public abstract class PacketStreamListener {
     @Getter
     private final PacketManager packetManager;
 
-    @Getter
-    @Setter
+    @Getter @Setter
+    private PacketState packetContext;
+
+    @Getter @Setter
     private volatile boolean listening;
 
     @Getter @Setter
     private String threadName = "PacketListener";
 
-    public void listen() {
+    public void listen(PacketState packetContext) {
+        setPacketContext(packetContext);
         log.info("Starting PacketListener '{}'...", getThreadName());
         Thread thread = new Thread(this::listenThread);
         thread.setName(getThreadName());

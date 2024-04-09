@@ -1,6 +1,7 @@
 package de.artus.proxy.client.ping;
 
 import com.google.gson.Gson;
+import de.artus.proxy.packets.packet.PacketState;
 import de.artus.proxy.packets.packet.c2s.C2SHandshake;
 import de.artus.proxy.packets.packet.c2s.C2SStatusRequest;
 import de.artus.proxy.packets.fieldtypes.StringField;
@@ -46,7 +47,7 @@ public class ServerListPingClient {
         DataInputStream in = new DataInputStream(getSocket().getInputStream());
 
         ClientPacketStreamListener incomingPackets = new ClientPacketStreamListener(in, getPacketManager());
-        incomingPackets.listen();
+        incomingPackets.listen(PacketState.STATUS);
 
 
 

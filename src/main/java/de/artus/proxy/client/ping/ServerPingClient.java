@@ -7,6 +7,7 @@ import de.artus.proxy.packets.fieldtypes.VarIntField;
 import de.artus.proxy.packets.fieldtypes.custom.CurrentTimeMillisLongField;
 import de.artus.proxy.packets.listener.PacketManager;
 import de.artus.proxy.packets.listener.client.ClientPacketStreamListener;
+import de.artus.proxy.packets.packet.PacketState;
 import de.artus.proxy.packets.packet.c2s.C2SHandshake;
 import de.artus.proxy.packets.packet.c2s.C2SPingRequest;
 import de.artus.proxy.packets.packet.c2s.C2SStatusRequest;
@@ -50,7 +51,7 @@ public class ServerPingClient {
         DataInputStream in = new DataInputStream(getSocket().getInputStream());
 
         ClientPacketStreamListener incomingPackets = new ClientPacketStreamListener(in, getPacketManager());
-        incomingPackets.listen();
+        incomingPackets.listen(PacketState.STATUS);
 
 
 
