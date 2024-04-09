@@ -5,27 +5,31 @@ import de.artus.proxy.packets.packet.PacketState;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.DataInputStream;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
+@Getter
 @Slf4j
 @RequiredArgsConstructor
 public abstract class PacketStreamListener {
 
-    @Getter
     private final DataInputStream stream;
-    @Getter
     private final PacketManager packetManager;
+    private final BlockingQueue<Packet> packetQueue = new LinkedBlockingQueue<>();
 
-    @Getter @Setter
+    @Setter
     private PacketState packetContext;
 
-    @Getter @Setter
+    @Setter
     private volatile boolean listening;
 
-    @Getter @Setter
+    @Setter
     private String threadName = "PacketListener";
 
     public void listen(PacketState packetContext) {
@@ -39,22 +43,21 @@ public abstract class PacketStreamListener {
     protected abstract void listenThread();
 
     protected void onPacketReceived(Packet packet) {
-        getPacketManager().receivePacket(packet).ifPresent(this::setCurrentPacket);
+        if (packet instanceof S2CDisconnect dis) {
+            setListening(false);
+            log.warn("Received Disconnect Packet: {}! Closing packet listener connection!", dis.getReason().getValue().getClearText());
+        }
+        getPacketManager().receivePacket(packet).ifPresent(packetQueue::add);
     }
 
-    @Getter
-    @Setter
-    private volatile Packet currentPacket;
+    @SneakyThrows
     public <T extends Packet> T expectPacket(Class<T> packetClass) {
         log.trace("Expecting next Packet to be: {}...", packetClass.getSimpleName());
-        setCurrentPacket(null);
-        while (getCurrentPacket() == null) {}
+        Packet currentPacket = packetQueue.take();
 
-        if (packetClass.isInstance(getCurrentPacket())) {
-            return packetClass.cast(getCurrentPacket());
-        }
+        if (packetClass.isInstance(currentPacket)) return packetClass.cast(currentPacket);
 
-        log.error("Expected Packet {}, but got {}", packetClass.getSimpleName(), getCurrentPacket().getClass().getSimpleName());
+        log.error("Expected Packet {}, but got {}", packetClass.getSimpleName(), currentPacket.getClass().getSimpleName());
         return null;
     }
 }
