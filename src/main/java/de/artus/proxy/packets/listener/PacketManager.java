@@ -13,10 +13,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@Getter
 @Slf4j
 public class PacketManager {
 
-    @Getter
     private final List<PacketListener> handlers = new ArrayList<>();
 
 
@@ -28,12 +28,14 @@ public class PacketManager {
     private boolean handlePacket(Packet packet) {
         if (packet instanceof UnknownPacket) return true;
 
+        boolean isCancelled = false;
+
         Set<Class<? extends Packet>> allPackets = new HashSet<>();
         allPackets.addAll(C2SPackets.getAllClasses());
         allPackets.addAll(S2CPackets.getAllClasses());
 
 
-        for (Class<? extends Packet> packetClass: allPackets) {
+        for (Class<? extends Packet> packetClass : allPackets) {
             if (!packetClass.isInstance(packet)) continue;
             for (PacketListener handler : getHandlers()) {
                 log.trace("Calling packet handler {}", handler.getClass().getName());
@@ -42,41 +44,35 @@ public class PacketManager {
                     log.trace("Found PacketListener {} in class {}", method.getName(), handler.getClass().getName());
                     if (method.getParameterCount() != 1) {
                         log.warn("PacketListener {} in class {} has wrong parameter count! Skipping PacketListener!", method.getName(), handler.getClass().getName());
-                        return true;
+                        continue;
                     }
-                    if (method.getReturnType().isAssignableFrom(PacketEventResult.class) || method.getReturnType().isAssignableFrom(Void.TYPE)) {
-                        log.trace("PacketListener {} has the correct signature", handler.getClass().getName());
-                        log.trace("PacketListener {}: checking for {}", handler.getClass().getName(), packetClass.getSimpleName());
-                        if (method.getParameterTypes()[0] == packetClass) {
-                            try {
-                                log.trace("Invoking listener with method type {}", packetClass.getSimpleName());
-                                if (method.getReturnType().isAssignableFrom(Void.TYPE)) method.invoke(handler.getClass().getConstructor().newInstance(),packetClass.cast(packet));
-                                else {
-                                    PacketEventResult result = (PacketEventResult) method.invoke(handler.getClass().getConstructor().newInstance(),packetClass.cast(packet));
-                                    if (result == PacketEventResult.CANCELLED) return false;
-                                }
-                            } catch (IllegalAccessException e) {
-                                log.error("No permissions to call Listener??? Exiting.....", e);
-                                System.exit(-1);
-                            } catch (InvocationTargetException e) {
-                                log.error("Listener threw an Exception!", e);
-                            } catch (InstantiationException e) {
-                                log.error("Could not instantiate Handler {}", handler.getClass().getName(), e);
-                            } catch (NoSuchMethodException e) {
-                                log.error("Handler {} does not have a no args constructor defined!", handler.getClass().getName(), e);
-                            }
-                        }
-                    } else {
+                    if (!method.getReturnType().isAssignableFrom(PacketEventResult.class) && !method.getReturnType().isAssignableFrom(Void.TYPE)) {
                         log.warn("PacketListener {} in class {} has wrong return type! Skipping PacketListener!", method.getName(), handler.getClass().getName());
-                        return true;
+                        continue;
+                    }
+                    log.trace("Method {} passed the signature check", method.getName());
+                    log.trace("Method {} checking parameter for type {}", method.getName(), packetClass.getSimpleName());
+                    if (method.getParameterTypes()[0] != packetClass) continue;
+
+                    try {
+                        log.trace("Invoking listener with method type {}", packetClass.getSimpleName());
+                        if (method.getReturnType().isAssignableFrom(Void.TYPE)) {
+                            method.invoke(handler, packetClass.cast(packet));
+                            continue;
+                        }
+                        PacketEventResult result = (PacketEventResult) method.invoke(handler, packetClass.cast(packet));
+                        isCancelled = result.isCancelled();
+
+                    } catch (IllegalAccessException e) {
+                        log.error("No permissions to call Listener??? Exiting.....", e);
+                        System.exit(-1);
+                    } catch (InvocationTargetException e) {
+                        log.error("Listener threw an Exception!", e);
                     }
                 }
             }
         }
-
-
-
-        return true;
+        return !isCancelled;
     }
 
     public void sendPacket(Packet packet, DataOutputStream out) throws IOException {
