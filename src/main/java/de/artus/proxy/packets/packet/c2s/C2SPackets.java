@@ -15,7 +15,8 @@ public enum C2SPackets {
 
 
     HANDSHAKE(0x00, C2SHandshake.class),
-    STATUS_REQUEST(0x00, C2SStatusRequest.class)
+    STATUS_REQUEST(0x00, C2SStatusRequest.class),
+    PING_REQUEST(0x01, C2SPingRequest.class)
 
     ;
 

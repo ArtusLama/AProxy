@@ -3,6 +3,7 @@ package de.artus.proxy.packets.packet.s2c;
 import de.artus.proxy.packets.packet.Packet;
 import de.artus.proxy.packets.packet.UnknownPacket;
 
+import de.artus.proxy.packets.packet.c2s.C2SPingRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,7 +15,8 @@ import java.util.stream.Collectors;
 public enum S2CPackets {
 
 
-    STATUS_RESPONSE(0x00, S2CStatusResponse.class)
+    STATUS_RESPONSE(0x00, S2CStatusResponse.class),
+    PING_RESPONSE(0x01, S2CPingResponse .class)
 
     ;
 

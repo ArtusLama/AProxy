@@ -30,14 +30,4 @@ public abstract class Packet {
         outputStream.write(x.toByteArray());
 
     }
-
-    /*
-    String hex(byte[] bytes) {
-        StringBuilder hexdump = new StringBuilder();
-        for (byte b : bytes) {
-            hexdump.append(String.format("%-2s", Integer.toHexString(b & 0xff)).replace(' ', '0'));
-            hexdump.append(" ");
-        }
-        return hexdump.toString();
-    }*/
 }

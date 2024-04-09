@@ -22,9 +22,13 @@ public abstract class PacketStreamListener {
     @Setter
     private volatile boolean listening;
 
+    @Getter @Setter
+    private String threadName = "PacketListener";
+
     public void listen() {
+        log.info("Starting PacketListener '{}'...", getThreadName());
         Thread thread = new Thread(this::listenThread);
-        thread.setName("PacketStreamListener");
+        thread.setName(getThreadName());
         thread.start();
     }
 
@@ -38,6 +42,7 @@ public abstract class PacketStreamListener {
     @Setter
     private volatile Packet currentPacket;
     public <T extends Packet> T expectPacket(Class<T> packetClass) {
+        log.trace("Expecting next Packet to be: {}...", packetClass.getSimpleName());
         setCurrentPacket(null);
         while (getCurrentPacket() == null) {}
 

@@ -1,5 +1,6 @@
 package de.artus.proxy.packets.fieldtypes;
 
+import com.google.gson.Gson;
 import de.artus.proxy.util.textcomponent.TextComponent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,12 +22,16 @@ public class JsonTextComponentField implements FieldType<TextComponent> {
     private TextComponent value;
 
     @Override
-    public FieldType<TextComponent> read(DataInputStream stream) throws IOException {
-        return null;
+    public JsonTextComponentField read(DataInputStream stream) throws IOException {
+        String jsonString = new StringField().read(stream).getValue();
+        setValue(new Gson().fromJson(jsonString, TextComponent.class));
+        return this;
     }
 
     @Override
-    public FieldType<TextComponent> write(DataOutputStream stream) throws IOException {
-        return null;
+    public JsonTextComponentField write(DataOutputStream stream) throws IOException {
+        String jsonString = new Gson().toJson(getValue());
+        new StringField(jsonString).write(stream);
+        return this;
     }
 }

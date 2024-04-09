@@ -16,6 +16,7 @@ public class ClientPacketStreamListener extends PacketStreamListener {
 
     public ClientPacketStreamListener(DataInputStream stream, PacketManager packetManager) {
         super(stream, packetManager);
+        setThreadName("S -> C");
     }
 
     protected void listenThread() {

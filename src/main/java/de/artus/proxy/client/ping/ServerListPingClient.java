@@ -1,5 +1,6 @@
 package de.artus.proxy.client.ping;
 
+import com.google.gson.Gson;
 import de.artus.proxy.packets.packet.c2s.C2SHandshake;
 import de.artus.proxy.packets.packet.c2s.C2SStatusRequest;
 import de.artus.proxy.packets.fieldtypes.StringField;

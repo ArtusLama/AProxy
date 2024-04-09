@@ -4,6 +4,7 @@ import de.artus.proxy.packets.listener.OnPacket;
 import de.artus.proxy.packets.listener.PacketEventResult;
 import de.artus.proxy.packets.listener.PacketListener;
 
+import de.artus.proxy.packets.packet.s2c.S2CPingResponse;
 import de.artus.proxy.packets.packet.s2c.S2CStatusResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,8 +21,8 @@ public class TestPacketListener implements PacketListener {
         return PacketEventResult.PASS;
     }
     @OnPacket
-    public void onPacket2(S2CStatusResponse packet) {
+    public void onPacket2(S2CPingResponse packet) {
         // VOID => Never cancels!
-        log.info("I am going to CANCEL the packet: {} (NOT ANYMORE :D)", packet);
+        log.info(packet.getPingStartTime().toString(), packet);
     }
 }
