@@ -2,11 +2,15 @@ package de.artus.proxy.util.textcomponent;
 
 import de.artus.proxy.util.textcomponent.events.ClickEvent;
 import de.artus.proxy.util.textcomponent.events.HoverEvent;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+@Data
 public class TextComponent {
     public ContentType type;
 
