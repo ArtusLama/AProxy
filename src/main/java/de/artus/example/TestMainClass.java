@@ -20,7 +20,6 @@ import java.net.Socket;
 @Slf4j
 public class TestMainClass {
 
-
     public static void main(String[] args) throws IOException {
         /*ServerListPingClient serverListPingClient = new ServerListPingClient(new ServerAddress("smashmc.eu", 25565));
 
@@ -28,13 +27,13 @@ public class TestMainClass {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonOutput = gson.toJson(serverListPingClient.ping());
-        log.info("Server Ping Result:\n" + jsonOutput);*/
+        log.info("Server Ping Result:\n{}", jsonOutput);*/
+
 
         ServerPingClient p = new ServerPingClient(new ServerAddress("localhost", 25565));
         p.getPacketManager().registerHandler(new TestPacketListener());
         float ping = p.ping();
-        log.info("Server Ping Result: " + ping + "ms");
-
+        log.info("Server Ping Result: {}ms", ping);
     }
 
 }
