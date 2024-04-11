@@ -2,6 +2,7 @@ package de.artus.proxy.packets.listener;
 
 import de.artus.proxy.packets.packet.Packet;
 import de.artus.proxy.packets.packet.PacketState;
+import de.artus.proxy.packets.packet.s2c.S2CDisconnect;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

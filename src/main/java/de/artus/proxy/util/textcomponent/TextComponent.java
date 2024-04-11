@@ -52,4 +52,13 @@ public class TextComponent {
         this.text = text;
         this.type = ContentType.text;
     }
+
+    public String getClearText() {
+        return getClearText(this);
+    }
+    public String getClearText(TextComponent t) {
+        if (t.extra == null) return t.text;
+        return t.text + Arrays.stream(t.extra).map(TextComponent::getClearText).collect(Collectors.joining());
+    }
+
 }
