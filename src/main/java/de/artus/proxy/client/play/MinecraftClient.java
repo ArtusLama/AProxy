@@ -1,9 +1,7 @@
 package de.artus.proxy.client.play;
 
-import de.artus.proxy.packets.fieldtypes.StringField;
-import de.artus.proxy.packets.fieldtypes.UShortField;
-import de.artus.proxy.packets.fieldtypes.UUIDField;
-import de.artus.proxy.packets.fieldtypes.VarIntField;
+import com.google.gson.GsonBuilder;
+import de.artus.proxy.packets.fieldtypes.*;
 import de.artus.proxy.packets.listener.PacketManager;
 import de.artus.proxy.packets.listener.client.ClientPacketStreamListener;
 import de.artus.proxy.packets.packet.PacketState;
@@ -25,6 +23,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.UUID;
 
 @Getter
 @RequiredArgsConstructor
@@ -50,6 +49,8 @@ public class MinecraftClient {
         if (isConnected()) disconnect();
 
         setConnection(new Socket());
+        getConnection().connect(SRVLookup.lookup(server));
+
         DataOutputStream outputStream = new DataOutputStream(getConnection().getOutputStream());
         ClientPacketStreamListener packetListener = new ClientPacketStreamListener(
                 new DataInputStream(getConnection().getInputStream()),
@@ -67,8 +68,9 @@ public class MinecraftClient {
 
         // Step 2: Send login start packet
         getPacketManager().sendPacket(new C2SLoginStart(
-                new StringField(getPlayer().getName()),
-                new UUIDField(getPlayer().getUuid())
+                new StringField("ArtusDev"),
+                new BooleanField(true),
+                new UUIDField(UUID.fromString("9edaa31a-7633-4a2a-a178-0f8edd271f0f"))
         ), outputStream);
 
         // Step 3: Listen for encryption request
