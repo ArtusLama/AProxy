@@ -3,21 +3,21 @@ package de.artus.proxy.util.textcomponent;
 import com.google.gson.annotations.JsonAdapter;
 import de.artus.proxy.util.textcomponent.events.ClickEvent;
 import de.artus.proxy.util.textcomponent.events.HoverEvent;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Singular;
+import lombok.Value;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Value
 @JsonAdapter(TextComponentAdapterFactory.class)
-@Builder
-@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TextComponent {
     public ContentType type;
 
-    public TextComponent[] extra;
+    @Singular("extra")
+    public List<TextComponent> extra;
 
     public Color color;
 
@@ -40,7 +40,8 @@ public class TextComponent {
     public String text;
 
     public String translate;
-    public TextComponent[] with;
+    @Singular("with")
+    public List<TextComponent> with;
 
     public String keybind;
 
@@ -50,17 +51,16 @@ public class TextComponent {
 
     public NBTContent nbt;
 
-
-    public TextComponent(String text) {
-        this.text = text;
-    }
-
     public String getClearText() {
-        return getClearText(this);
-    }
-    public String getClearText(TextComponent t) {
-        if (t.extra == null) return t.text;
-        return t.text + Arrays.stream(t.extra).map(TextComponent::getClearText).collect(Collectors.joining());
+        return getClearTextOf(this);
     }
 
+    public static String getClearTextOf(TextComponent t) {
+        if (t.extra == null) return t.text;
+        return t.text + t.extra.stream().map(TextComponent::getClearText).collect(Collectors.joining());
+    }
+
+    public static TextComponent fromString(String s) {
+        return builder().text(s).build();
+    }
 }

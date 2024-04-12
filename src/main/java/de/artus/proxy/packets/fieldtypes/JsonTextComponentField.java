@@ -28,7 +28,7 @@ public class JsonTextComponentField implements FieldType<TextComponent> {
     public JsonTextComponentField read(DataInputStream stream) throws IOException {
         String jsonString = new StringField().read(stream).getValue();
 
-        log.trace("Trying to decode JSON: {}", jsonString);
+        log.trace("Trying to deserialize TextComponent: {}", jsonString);
         setValue(GSON.fromJson(jsonString, TextComponent.class));
         return this;
     }

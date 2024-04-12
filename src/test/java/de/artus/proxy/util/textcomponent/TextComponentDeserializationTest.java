@@ -13,29 +13,36 @@ public class TextComponentDeserializationTest {
 
     @Test
     public void simpleJsonObject() {
-        assertEquals(new TextComponent("Hello!"), GSON.fromJson("""
+        assertEquals(TextComponent.fromString("Hello!"), GSON.fromJson("""
                 {"text":"Hello!"}""", TextComponent.class));
     }
 
     @Test
     public void JsonObjectTextWithColor() {
-        TextComponent expected = new TextComponent("Hello!");
-        expected.color = Color.blue;
+        TextComponent expected = TextComponent.builder().text("Hello!").color(Color.blue).build();
         assertEquals(expected, GSON.fromJson("""
                 {"text":"Hello!", "color": "blue"}""", TextComponent.class));
     }
 
     @Test
     public void arrayTextComponent() {
-        TextComponent expected = new TextComponent("Hello");
-        expected.extra = new TextComponent[]{new TextComponent(" World!")};
+        var expected = TextComponent.builder().text("Hello").extra(TextComponent.fromString(" World!")).build();
         assertEquals(expected, GSON.fromJson("""
                 ["Hello", " World!"]""", TextComponent.class));
     }
 
     @Test
+    public void nestedArray() {
+        //TextComponent expected = TextComponent.builder().text("Hiii!").extra(new TextComponent[]{new TextComponent(" It's meee"), new TextComponent(" nested arrays!!")}).build();
+        var expected = TextComponent.builder().text("Hii!").extra(TextComponent.fromString(" It's meee")).extra(TextComponent.fromString(" nested arrays!!")).build();
+
+        assertEquals(expected, GSON.fromJson("""
+                [["Hii!", " It's meee"], " nested arrays!!"]""", TextComponent.class));
+    }
+
+    @Test
     public void stringShorthand() {
-        TextComponent expected = new TextComponent("Hello!");
+        var expected = TextComponent.fromString("Hello!");
 
         assertEquals(expected, GSON.fromJson("\"Hello!\"", TextComponent.class));
     }
