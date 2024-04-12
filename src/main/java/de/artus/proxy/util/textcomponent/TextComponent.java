@@ -1,16 +1,19 @@
 package de.artus.proxy.util.textcomponent;
 
+import com.google.gson.annotations.JsonAdapter;
 import de.artus.proxy.util.textcomponent.events.ClickEvent;
 import de.artus.proxy.util.textcomponent.events.HoverEvent;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Data
+@JsonAdapter(TextComponentAdapterFactory.class)
+@Builder
+@AllArgsConstructor
 public class TextComponent {
     public ContentType type;
 
@@ -50,7 +53,6 @@ public class TextComponent {
 
     public TextComponent(String text) {
         this.text = text;
-        this.type = ContentType.text;
     }
 
     public String getClearText() {
