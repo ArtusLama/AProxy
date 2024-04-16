@@ -1,9 +1,8 @@
 package de.artus.proxy.util.textcomponent;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter
+@Value
 public class Score {
 
     public String name;

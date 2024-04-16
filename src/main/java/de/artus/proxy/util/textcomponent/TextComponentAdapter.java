@@ -18,7 +18,6 @@ public class TextComponentAdapter extends TypeAdapter<TextComponent> {
 
     @Override
     public void write(JsonWriter jsonWriter, TextComponent textComponent) throws IOException {
-        new TextComponent(textComponent.type, textComponent.extra, textComponent.color, textComponent.bold, textComponent.italic, textComponent.underlined, textComponent.strikethrough, textComponent.obfuscated, textComponent.font, textComponent.insertion, textComponent.clickEvent, textComponent.hoverEvent, textComponent.text, textComponent.translate, textComponent.with, textComponent.keybind, textComponent.score, textComponent.selector, textComponent.nbt);
         gson.getDelegateAdapter(new TextComponentAdapterFactory(), new TypeToken<TextComponent>() {}).write(jsonWriter, nullOutSuperfluousFields(textComponent));
     }
 
@@ -28,14 +27,14 @@ public class TextComponentAdapter extends TypeAdapter<TextComponent> {
 
     private TextComponent nullOutSuperfluousFields(TextComponent textComponent) {
         return new TextComponent(textComponent.type,
-                check(textComponent.extra, List.of()),
+                check(textComponent.extra, List.of()), // VERY IMPORTANT: NO EMPTY LISTS ALLOWED PER DOCUMENTATION
                 textComponent.color,
                 check(textComponent.bold, false),
                 check(textComponent.italic, false),
                 check(textComponent.underlined, false),
                 check(textComponent.strikethrough, false),
                 check(textComponent.obfuscated, false),
-                check(textComponent.font, Font.DEFAULT),
+                check(textComponent.font, TextComponent.FONT_DEFAULT),
                 check(textComponent.insertion, ""),
                 textComponent.clickEvent,
                 textComponent.hoverEvent,
@@ -45,7 +44,13 @@ public class TextComponentAdapter extends TypeAdapter<TextComponent> {
                 textComponent.keybind,
                 textComponent.score,
                 textComponent.selector,
-                textComponent.nbt);
+                check(textComponent.separator, TextComponent.fromString(", ")),
+                textComponent.nbt,
+                check(textComponent.interpret, true),
+                textComponent.block,
+                textComponent.entity,
+                textComponent.storage
+        );
     }
 
     @Override
@@ -70,6 +75,14 @@ public class TextComponentAdapter extends TypeAdapter<TextComponent> {
             }
             default ->
                     throw new JsonParseException("Expected BEGIN_ARRAY, BEGIN_OBJECT, or STRING, but got " + jsonReader.peek());
+        }
+    }
+
+    public static class TextComponentAdapterFactory implements TypeAdapterFactory {
+        @Override
+        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+            //noinspection unchecked
+            return (TypeAdapter<T>) new TextComponentAdapter(gson);
         }
     }
 }

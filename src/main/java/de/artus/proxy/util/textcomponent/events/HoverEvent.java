@@ -1,14 +1,10 @@
 package de.artus.proxy.util.textcomponent.events;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import de.artus.proxy.util.textcomponent.TextComponent;
+import lombok.Value;
 
-@Data
+@Value
 public class HoverEvent {
-
     public HoverAction action;
-    public String contents;
-
-
+    public TextComponent contents;
 }

@@ -11,6 +11,12 @@ public class TextComponentSerializationTest {
     @Test
     public void jsonObject() {
         assertEquals("""
-                {"text":"Hewo"}""", GSON.toJson(TextComponent.fromString("Hewo")));
+                {"text":"Hello"}""", GSON.toJson(TextComponent.fromString("Hello")));
+    }
+
+    @Test
+    public void jsonObjectWithColor() {
+        assertEquals("""
+                {"color":"green","text":"Hello"}""", GSON.toJson(TextComponent.builder().text("Hello").color(Color.green).build()));
     }
 }
