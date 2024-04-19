@@ -25,7 +25,7 @@ public class ClientPacketStreamListener extends PacketStreamListener {
             while (isListening()) {
 
                 while (getStream().available() == 0) { // not 'the yellow from the egg' ;D
-                    if (!isListening()) break;
+                    if (!isListening()) return;
                 }
 
                 int packetLength = new VarIntField().read(getStream()).getValue();

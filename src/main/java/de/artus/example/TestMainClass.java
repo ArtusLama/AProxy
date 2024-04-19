@@ -32,8 +32,7 @@ public class TestMainClass {
 
         ServerPingClient p = new ServerPingClient(new ServerAddress("localhost", 25565));
         p.getPacketManager().registerHandler(new TestPacketListener());
-        float ping = p.ping();
-        log.info("Server Ping Result: {}ms", ping);
+        log.info("Server Ping Result: {}ms", p.ping());
     }
 
 }

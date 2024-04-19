@@ -42,7 +42,7 @@ public class ServerPingClient {
     @Getter
     private final PacketManager packetManager = new PacketManager();
 
-    public float ping() throws IOException {
+    public long ping() throws IOException {
         setSocket(new Socket());
         getSocket().connect(SRVLookup.lookup(getServer()), getTimeout());
 
@@ -74,7 +74,7 @@ public class ServerPingClient {
 
         // Wait for the response
         S2CPingResponse response = incomingPackets.expectPacket(S2CPingResponse.class);
-        float ping = (System.currentTimeMillis() - response.getPingStartTime().getValue());
+        long ping = (System.currentTimeMillis() - response.getPingStartTime().getValue());
 
         incomingPackets.setListening(false);
         socket.close();
